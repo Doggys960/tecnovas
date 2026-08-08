@@ -17,8 +17,7 @@ export default function LoginPage() {
     setError("")
     const res = await signIn("credentials", { email, password, redirect: false })
     setLoading(false)
-    if (res?.error) setError("Credenciales inválidas")
-    else router.push("/dashboard")
+  
   }
 
   return (
