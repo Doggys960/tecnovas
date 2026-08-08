@@ -5,19 +5,30 @@ import { ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@tecnoinnova.ec")
-  const [password, setPassword] = useState("admin123")
+  // 1. Iniciar vacíos por seguridad
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
+    
     const res = await signIn("credentials", { email, password, redirect: false })
-    setLoading(false)
-  
+    
+    // 2. Evaluar la respuesta para actuar en consecuencia
+    if (res?.error) {
+      setError("Usuario o contraseña incorrectos.")
+      setLoading(false) // Solo quitamos el loading si hay error
+    } else if (res?.ok) {
+      // 3. Redirigir al usuario al sistema
+      router.push("/dashboard") // Cambia "/dashboard" por tu ruta principal
+      router.refresh() 
+    }
   }
 
   return (
@@ -28,15 +39,31 @@ export default function LoginPage() {
         </div>
         <h1 className="text-[22px] font-extrabold mb-1">TecnoInnova S.A.</h1>
         <p className="text-[13px] text-gray-400 mb-7">Sistema de Gestión Integral de Seguridad Electrónica</p>
+        
         {error && <div className="mb-4 text-sm text-red-500 bg-red-50 rounded-lg py-2">{error}</div>}
+        
         <form onSubmit={handleSubmit} className="text-left">
           <div className="mb-4">
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Usuario</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" required />
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className="input" 
+              required 
+              disabled={loading} // Buena práctica: bloquear input mientras carga
+            />
           </div>
           <div className="mb-5">
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Contraseña</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input" required />
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="input" 
+              required 
+              disabled={loading} // Buena práctica: bloquear input mientras carga
+            />
           </div>
           <button type="submit" disabled={loading} className="btn btn-primary w-full">
             {loading ? "Verificando..." : "Ingresar al Sistema"}
