@@ -1,35 +1,16 @@
 "use client"
-import { useState } from "react"
-import { signIn } from "next-auth/react"
-import { ShieldCheck } from "lucide-react"
+
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { ShieldCheck } from "lucide-react"
 
 export default function LoginPage() {
-  // 1. Iniciar vacíos por seguridad
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-    
-    const res = await signIn("credentials", { email, password, redirect: false })
-    
-    // 2. Evaluar la respuesta para actuar en consecuencia
-    if (res?.error) {
-      setError("Usuario o contraseña incorrectos.")
-      setLoading(false) // Solo quitamos el loading si hay error
-    } else if (res?.ok) {
-      // 3. Redirigir al usuario al sistema
-      router.push("/dashboard") // Cambia "/dashboard" por tu ruta principal
-      router.refresh() 
-    }
-  }
+  useEffect(() => {
+    // Redirige automáticamente al dashboard al cargar la página
+    router.push("/dashboard") // Cambia "/dashboard" por tu ruta principal si es diferente
+  }, [router])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
@@ -40,35 +21,11 @@ export default function LoginPage() {
         <h1 className="text-[22px] font-extrabold mb-1">TecnoInnova S.A.</h1>
         <p className="text-[13px] text-gray-400 mb-7">Sistema de Gestión Integral de Seguridad Electrónica</p>
         
-        {error && <div className="mb-4 text-sm text-red-500 bg-red-50 rounded-lg py-2">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="text-left">
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Usuario</label>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              className="input" 
-              required 
-              disabled={loading} // Buena práctica: bloquear input mientras carga
-            />
-          </div>
-          <div className="mb-5">
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Contraseña</label>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="input" 
-              required 
-              disabled={loading} // Buena práctica: bloquear input mientras carga
-            />
-          </div>
-          <button type="submit" disabled={loading} className="btn btn-primary w-full">
-            {loading ? "Verificando..." : "Ingresar al Sistema"}
-          </button>
-        </form>
+        <div className="py-6">
+          <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-sm font-semibold text-gray-600">Cargando sistema...</p>
+        </div>
+
         <p className="text-[11px] text-gray-400 mt-5">v2.4.1 — Servidor: PROD-01</p>
       </div>
     </div>
