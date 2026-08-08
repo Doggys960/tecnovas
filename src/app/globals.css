@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-gray-50 text-primary antialiased; font-family: 'Inter', -apple-system, sans-serif; }
+}
+
+@layer components {
+  .badge { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold; }
+  .badge-pending { @apply bg-amber-50 text-amber-600; }
+  .badge-approved { @apply bg-green-50 text-green-600; }
+  .badge-rejected { @apply bg-red-50 text-red-500; }
+  .badge-inprogress { @apply bg-blue-50 text-accent; }
+  .badge-completed { @apply bg-green-50 text-green-600; }
+  .card { @apply bg-white rounded-xl border border-gray-200 shadow-sm; }
+  .input { @apply w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary transition-colors bg-white; }
+  .btn { @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer border-none; }
+  .btn-primary { @apply bg-primary text-white hover:opacity-90 hover:-translate-y-px; }
+  .btn-ghost { @apply bg-transparent text-gray-600 border border-gray-200 hover:bg-gray-50; }
+  .btn-sm { @apply px-3.5 py-1.5 text-xs; }
+}
